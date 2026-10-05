@@ -1,4 +1,5 @@
 import { candidatures } from "@/lib/data";
+import Link from "next/link";
 
 export default function Page() {
     return (
@@ -7,7 +8,9 @@ export default function Page() {
 
             <ul>
                 {candidatures.map((candidature) => (
-                    <li key={candidature.id}>{candidature.entrprise} - {candidature.poste}</li>
+                    <li key={candidature.id}> <Link href={`/candidatures/${candidature.id}`}>
+                        {candidature.entrprise} - {candidature.poste}
+                        </Link></li>
                 ))}
             </ul>
         </div>
