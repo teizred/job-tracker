@@ -1,18 +1,17 @@
 "use server"
 
+import { db } from "./db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { applications } from "./data";
+import { applications } from "./db/schema";
 
 export async function createApplication(formData: FormData) {
     const company = formData.get("company") as string;
     const position = formData.get("position") as string;
 
-    applications.push({
-        id: String(applications.length + 1),
+    await db.insert(applications).values ({
         company,
         position,
-        status: "envoyée",
     });
 
     revalidatePath("/applications");
