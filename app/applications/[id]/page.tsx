@@ -1,6 +1,10 @@
-import { applications, statusColors } from "@/lib/data";
+import { statusColors } from "@/lib/data";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { db } from "@/lib/db";
+import { applications } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+
 
 export default async function Page({
     params,
@@ -8,10 +12,17 @@ export default async function Page({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    const application = applications.find((application) => application.id === id);
+
+    if (isNaN(Number(id))) {
+        notFound();
+    }
+
+    const [application] = await db.select().from(applications).where(eq(applications.id, Number(id)));
+
     if (!application) {
         notFound();
     }
+    
     return (
         <div className="max-w-2xl mx-auto p-8 bg-zinc-900 rounded-lg border border-zinc-800">
             <h1 className="text-3xl font-bold mb-6 text-white">Candidature pour {application.company}</h1>
@@ -22,7 +33,7 @@ export default async function Page({
                 {application.status}
             </span>
 
-            <Link href="/applications" className="text-blue-500 hover:text-blue-700 mt-6"> Retour </Link>
+            <Link href="/applications" className="block text-blue-500 hover:text-blue-700 mt-6"> Retour </Link>
         </div>
     )
 }
