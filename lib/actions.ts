@@ -26,3 +26,13 @@ export async function deleteApplication(formData: FormData) {
     revalidatePath("/applications");
     redirect("/applications");
 }
+
+export async function updateStatus(formData: FormData) {
+    const id = Number(formData.get("id"))
+    const status = formData.get("status") as string
+  
+    await db.update(applications).set({ status }).where(eq(applications.id, id))
+  
+    revalidatePath("/applications")
+    revalidatePath(`/applications/${id}`)
+  }
