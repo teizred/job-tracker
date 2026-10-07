@@ -1,6 +1,7 @@
 "use server"
 
 import { db } from "./db";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { applications } from "./db/schema";
@@ -14,6 +15,14 @@ export async function createApplication(formData: FormData) {
         position,
     });
 
+    revalidatePath("/applications");
+    redirect("/applications");
+}
+
+export async function deleteApplication(formData: FormData) {
+    const id = Number(formData.get("id"))
+
+    await db.delete(applications).where(eq(applications.id, id));
     revalidatePath("/applications");
     redirect("/applications");
 }

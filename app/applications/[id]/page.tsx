@@ -4,6 +4,8 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { applications } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { deleteApplication } from "@/lib/actions";
+import { DeleteButton } from "@/lib/components/delete-button";
 
 
 export default async function Page({
@@ -34,6 +36,10 @@ export default async function Page({
             </span>
 
             <Link href="/applications" className="block text-blue-500 hover:text-blue-700 mt-6"> Retour </Link>
+            <form action={deleteApplication}>
+                <input type="hidden" name="id" value={application.id} />
+                <DeleteButton />
+            </form>
         </div>
     )
 }
