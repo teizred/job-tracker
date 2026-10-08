@@ -6,9 +6,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { applications } from "./db/schema";
 
-export async function createApplication(formData: FormData) {
+export async function createApplication(_prevState: { error: string }, formData: FormData) {
     const company = formData.get("company") as string;
     const position = formData.get("position") as string;
+
+    if (!company || !position) {
+        return { error: "L'entreprise et le poste sont obligatoires." };
+    }
 
     await db.insert(applications).values ({
         company,
